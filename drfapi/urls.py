@@ -21,5 +21,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+# 16
+#     Now, we’ll have to add the login and  logout views for the browsable API.  
+# These come with the rest framework, all we  have to do is include them in the main urls.py.
+    path('api-auth/', include('rest_framework.urls')),
+
+    # 17 create permissions.py in drfapi
+
     path('', include('profiles.urls')),
 ]
