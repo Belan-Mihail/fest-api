@@ -24,6 +24,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         # ) так как без контекста request.user это будет любой текущий юзе а не владелец профиля
         #  и проверка request.user == obj.owner будет работать не корректно
 
+    # my owm experement with step 28
+    def validate_content(self, value):
+        if len(value) < 2:
+            raise serializers.ValidationError('Content must contain at least 3 characters')
+        return value
+
     class Meta:
         model = Profile
 
@@ -40,3 +46,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 # the id field is created automatically without us having to write it ourselves.
 # If we want it to be included in the response, we have to add it to the serializer's field array.
 # Now, let's add our serializer to our views.py file.
+
+# 22 new app post
+# 23 model.post

@@ -30,4 +30,8 @@ urlpatterns = [
     # 17 create permissions.py in drfapi
 
     path('', include('profiles.urls')),
+
+    # 32 views 
+    # 31
+    path('', include('post.urls')),
 ]

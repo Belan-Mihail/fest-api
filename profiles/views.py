@@ -1,5 +1,5 @@
 from django.http import Http404
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Profile
@@ -31,7 +31,7 @@ class ProfileList(APIView):
         # serializer = ProfileSerializer(profiles, many=True)
         # 19
         serializer = ProfileSerializer(
-            profile, context={'request': request}, many=True
+            profiles, context={'request': request}, many=True
         )
         return Response(serializer.data)
 
@@ -48,6 +48,14 @@ class ProfileDetail(APIView):
 
     # 18
     permission_classes = [IsOwnerOrReadOnly]
+
+    # failed!
+    # my own experement from 33 steps. Add thats only Authenticated users can watch profile detail
+    # need import from rest_framework import status, permissions
+    # permission_classes = [
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     IsOwnerOrReadOnly
+    # ] 
 
     # 11
     def get_object(self, pk):
