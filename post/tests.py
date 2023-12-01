@@ -3,6 +3,8 @@ from .models import Post
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+# 38 startapp comments and add to settings.py go to the model
+
 # 37
 class PostListViewTests(APITestCase):
     # setUp before all tests

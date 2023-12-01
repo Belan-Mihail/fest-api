@@ -34,4 +34,7 @@ urlpatterns = [
     # 32 views 
     # 31
     path('', include('post.urls')),
+
+    # 42
+    path('', include('comments.urls')),
 ]
