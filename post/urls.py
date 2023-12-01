@@ -6,4 +6,9 @@ from post import views
 
 urlpatterns = [
     path('posts/', views.PostList.as_view()),
+
+    # 36 view delete method postdetail
+    # 35
+    path('posts/<int:pk>/', views.PostDetail.as_view()),
+    # 35-!
 ]

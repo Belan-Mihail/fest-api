@@ -1,12 +1,15 @@
+from django.http import Http404
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Post
 from .serializers import PostSerializer
+from drfapi.permissions import IsOwnerOrReadOnly
 
 # create urls.py in posts
 # 29
 class PostList(APIView):
+    # 34 add PostDetailView with get and put
     # 33
     # To have a nice create post form  rendered in the preview window,  
 # let’s also set the serializer_class attribute  to PostSerializer on our PostList class.
@@ -47,3 +50,49 @@ class PostList(APIView):
             serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
     # 32-!
+
+# 35 urls.py
+    # 34 import Http404 and from drfapi.permissions import IsOwnerOrReadOnly
+class PostDetail(APIView):
+
+    serializer_class = PostSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def get_object(self, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+            self.check_object_permissions(self.request, post)
+            return post
+        except Post.DoesNotExist:
+            raise Http404
+    
+
+    def get(self, request, pk):
+        post = self.get_object(pk)
+        serializer = PostSerializer(
+            post, context={'request': request}
+        )
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        post = self.get_object(pk)
+
+        serializer = PostSerializer(
+            post, context={'request': request}, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# 34-!
+
+# 37 test post
+# 36
+    def delete(self, request, pk):
+        post = self.get_object(pk)
+        post.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )
+# 36!
+    

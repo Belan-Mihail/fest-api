@@ -59,7 +59,6 @@ class ProfileDetail(APIView):
 
     # 11
     def get_object(self, pk):
-        
         try:
             profile = Profile.objects.get(pk=pk)
             # 18 and from drfapi.permissions import IsOwnerOrReadOnly
