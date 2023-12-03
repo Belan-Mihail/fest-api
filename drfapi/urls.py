@@ -35,6 +35,10 @@ urlpatterns = [
     # 31
     path('', include('post.urls')),
 
+    # 43 create likes app/ add to settings and go to the models
     # 42
     path('', include('comments.urls')),
+
+    # 46
+    path('', include('likes.urls')),
 ]
