@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Post
+from likes.models import Likes
 
 # 25 model
 # 24 
@@ -9,6 +10,9 @@ class PostSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    likes_id = serializers.SerializerMethodField()
+    likes_count = serializers.ReadOnlyField()
+    comments_count = serializers.ReadOnlyField()
 
     # 28
 #     Finally, we can implement the validation  checks for size, width and height on post images.
@@ -31,6 +35,18 @@ class PostSerializer(serializers.ModelSerializer):
                 'Image width larger than 4096px!'
             )
         return value
+    
+#     If they are, we’ll check if they liked the post  we’re trying to retrieve. We’ll filter the Like  
+# model where the currently logged in user is the  user who liked the post we’re trying to retrieve.
+# If that’s the case, we’ll retrieve  the like_id and None otherwise.
+    def get_likes_id(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            like = Likes.objects.filter(
+                owner=user, post=obj
+            ).first()
+            return like.id if like else None
+        return None
 
 # 28-! 
 # 29 views
@@ -50,7 +66,7 @@ class PostSerializer(serializers.ModelSerializer):
 
         fields = [
             'id', 'owner', 'profile_id', 'profile_image', 'created_at', 'updated_at', 'title',
-            'content', 'image', 'is_owner', 'image_filter'
+            'content', 'image', 'is_owner', 'image_filter', 'likes_id', 'likes_count', 'comments_count'
         ]
 # 27 add new filter_image field
 # 28 up

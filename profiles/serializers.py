@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Profile
+from followers.models import Followers
 
 # 9
 # 10 views.py
@@ -16,6 +17,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     # 20
     # 21 below
     is_owner = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
+    posts_count = serializers.ReadOnlyField()
+    followers_count = serializers.ReadOnlyField()
+    following_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -29,6 +34,24 @@ class ProfileSerializer(serializers.ModelSerializer):
         if len(value) < 2:
             raise serializers.ValidationError('Content must contain at least 3 characters')
         return value
+    
+
+    def get_following_id(self, obj):
+        # get current user
+        user = self.context['request'].user
+        # check if user.is_authenticated
+        if user.is_authenticated:
+            # Then I will check if the logged in user  is following any of the other profiles.  
+            # To do this I will filter the Follower object.
+            # If the logged in user is following this  profile an instance will be returned.
+            # If the logged in user is not following  this profile, None will be returned.
+            following = Followers.objects.filter(
+                owner=user, followed=obj.owner
+            ).first()
+            print(following)
+            return following.id if following else None
+        return None
+
 
     class Meta:
         model = Profile
@@ -38,7 +61,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         fields = [
             'id', 'owner', 'created_at', 'updated_at', 'name',
-            'content', 'image', 'is_owner'
+            'content', 'image', 'is_owner', 'following_id', 'posts_count',
+            'followers_count', 'following_count'
             # 21 add 'is_owner'
         ]
 

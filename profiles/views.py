@@ -1,10 +1,12 @@
+from django.db.models import Count
 from django.http import Http404
-from rest_framework import status, permissions, generics
+from rest_framework import status, permissions, generics, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Profile
 from .serializers import ProfileSerializer
 from drfapi.permissions import IsOwnerOrReadOnly
+from followers.models import Followers
 
 # 6 
 # 7 create urls.py in profiles
@@ -108,9 +110,60 @@ class ProfileList(generics.ListCreateAPIView):
     List comments or create a comment if logged in.
     """
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+
+    # The annotate function allows  us to define extra fields to be added to the  
+# queryset.
+
+# We can see, however, that there is no direct  relationship between Profile and Post.  
+# That’s why we need to go through  the User model to get there. 
+# So, inside the Count class, we will need  to perform a lookup that spans the profile,  
+# user, and post models, so we can get to the  Post model with the instances we want to count.
+    queryset = Profile.objects.annotate(
+        # how many post user has
+
+#         Similar to when we used dot notation,  the first part of our lookup string  
+# is the owner field on the Profile model,  which is a OneToOne field referencing User.  
+# From there we can reach the  Post model. So we have to add  
+# ‘double underscore post’ to show the  relationship between Profile, User and Post.
+
+# As we’ll be defining more than one field  inside the annotate function, we also need to  
+# pass distinct=True here to only count the unique  posts. Without this we would get duplicates.
+        posts_count=Count('owner__post', distinct=True),
+
+#         This time we have a problem. Within the  Follower model, we have two foreign keys  
+# that are referencing the User model. One  to identify the User following another user  
+# and the other to identify the one being followed.  So here, we need to use the related_names  
+# “following” and “followed” defined in followers’  models.py file, instead of  
+# the model name like we did for owner__post. The  string value then, will be ‘owner__followed’.  
+        followers_count=Count('owner__followed', distinct=True),
+        following_count=Count('owner__following', distinct=True)
+    ).order_by('-created_at')
+
+# review
+# So, just to review what we’ve done here.  First, we’ve used the annotate method on  
+# Profile to add some specific fields to our  queryset. We’ve then used the count method  
+# to calculate how many model instances of each  there are. We’ve linked these fields to their  
+# relevant model fields, and limited our instances  being returned using distinct = True.
 
 
+#     Next, we’ll need to create our filters. To make these fields sortable,  
+# I’ll set the filter_backends  attribute to OrderingFilter.
+# I’ll also need to set the ordering_fields  to the fields we just annotated,  
+# namely posts, followers and following count.
+
+    filter_backends = [
+        filters.OrderingFilter
+    ]
+    ordering_fields = [
+        'posts_count',
+        'followers_count',
+        'following_count',
+#         I’d also like to be able to sort our profiles by  how recently they followed a profile and by how  
+# recently they have been followed by a profile.  We’ll use the ‘created_at’ field to do this,  
+# and then just attach this to the following and  followed related name fields, as appropriate.
+        'owner__following__created_at',
+        'owner__followed__created_at',
+    ]
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
@@ -118,4 +171,8 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.annotate(
+        posts_count=Count('owner__post', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
+        following_count=Count('owner__following', distinct=True)
+    ).order_by('-created_at')
