@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from drfapi.permissions import IsOwnerOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 
 # 41 urls.py comments
 # 40
@@ -26,6 +27,15 @@ class CommentList(generics.ListCreateAPIView):
 # This would make sense if we were  dealing with user sensitive data  
 # like orders or payments where we would need to  make sure users can access and query only their own data.
     queryset = Comment.objects.all()
+
+    filter_backends = [
+        DjangoFilterBackend
+    ]
+
+
+    filterset_fields = [
+        'post'
+    ]
 
 #     Before we test the view, we’ll have to make sure  comments are associated with a user upon creation.  
 # We do this with generics by  defining the perform_create method,  
