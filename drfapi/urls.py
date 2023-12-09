@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import root_route
 
 # 8 import includea and add path to profile api
 # 9 create serializers.py
 
 urlpatterns = [
+    path('', root_route),
     path('admin/', admin.site.urls),
 
 # 16

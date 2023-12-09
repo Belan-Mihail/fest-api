@@ -1,3 +1,4 @@
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
 from .models import Comment
 
@@ -10,6 +11,17 @@ class CommentSerializer(serializers.ModelSerializer):
     # post = serializers.ReadOnlyField(source='owner.post.id') dont need!
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    # update data formatting and from django.contrib.humanize.templatetags.humanize import naturaltime
+    created_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
+
+# update data formatting
+    def get_created_at(self, obj):
+        return naturaltime(obj.created_at)
+
+# update data formatting
+    def get_updated_at(self, obj):
+        return naturaltime(obj.updated_at)
 
 
     def validate_content(self, value):
