@@ -73,6 +73,7 @@ DEBUG = 'DEV' in os.environ
 ALLOWED_HOSTS = [
    os.environ.get('ALLOWED_HOST'),
    'localhost',
+   "8000-belanmihail-festapi-r45v6znsas2.ws-eu106.gitpod.io",
 ]
 
 
