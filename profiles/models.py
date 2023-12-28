@@ -21,6 +21,15 @@ class Profile(models.Model):
         return f"{self.owner}'s profile"
 
 
+# All good so far, now we need to ensure that a  profile is created every time a user is created.  
+# We can do that with a Django  feature called signals.
+# You can think of signals as notifications that  get triggered by an event. We can listen for  
+# such Model events and have some code, usually a  function, run each time that signal is received.
+# In our case, we would want to be notified when a  
+# user is created so that a profile can  automatically be created alongside it. 
+# Examples of built-in Model signals include:  pre_save, post_save, pre_delete and post_delete.
+# So, I’ll import post_save at  the top from Django’s signals.
+
 # 3
 # 4 admin
 # Now we have to define the create_profile function  before we pass it as an argument. Because we are  
