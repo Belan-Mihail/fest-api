@@ -49,6 +49,11 @@ class CommentListViewTests(APITestCase):
         self.assertEqual(post1_comment3.content, 'comment3')
         # self.assertEqual(obj.title, 'a title1')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
+
+    def test_user_not_logged_in_cant_create_comment(self):
+        response = self.client.post('/comments/', {'owner': user, 'post': 1, 'content': 'comment4'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
        
        
         
