@@ -27,6 +27,15 @@ class Post(models.Model):
             ('walden', 'Walden'),
             ('xpro2', 'X-pro II')
         ]
+    
+    
+    category_choices = [
+            ('landscapes', 'landscapes'),
+            ('animals', 'animals'),
+            ('plants', 'plants'),
+            ('abstraction', 'abstraction'),
+            ('other', 'other'),
+        ]
 # 25-!
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,6 +49,9 @@ class Post(models.Model):
     # 26 and make migrations
     image_filter = models.CharField(
         max_length=32, choices=image_filter_choices, default='normal'
+    )
+    post_category = models.CharField(
+        max_length=32, choices=category_choices, default='other'
     )
     # 26-!
     # 27 serializers

@@ -12,6 +12,8 @@ class PostSerializer(serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     # # add i
     profile_content = serializers.ReadOnlyField(source='owner.profile.content')
+    # add me
+    profile_greeting = serializers.ReadOnlyField(source='owner.profile.greeting')
     likes_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
@@ -68,7 +70,7 @@ class PostSerializer(serializers.ModelSerializer):
 
         fields = [
             'id', 'owner', 'profile_id', 'profile_image', 'created_at', 'updated_at', 'title',
-            'content', 'image', 'is_owner', 'image_filter', 'likes_id', 'likes_count', 'comments_count', 'profile_content'
+            'content', 'image', 'is_owner', 'image_filter', 'likes_id', 'likes_count', 'comments_count', 'profile_content', 'profile_greeting', 'post_category',
         ]
 # 27 add new filter_image field
 # 28 up

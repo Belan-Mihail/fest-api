@@ -13,6 +13,8 @@ class Profile(models.Model):
     image = models.ImageField(
         upload_to='images/', default='../default_profile_d9pfdc_pdmycw'
     )
+    # add me
+    greeting = models.CharField(max_length=25, blank=True)
 
     class Meta:
         ordering = ['-created_at']
