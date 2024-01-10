@@ -122,7 +122,7 @@ class PostList(generics.ListCreateAPIView):
         'owner__followed__owner__profile',
         'likes__owner__profile',
         'owner__profile',
-        'category',
+        'post_category',
     ]
 
     search_fields = [
