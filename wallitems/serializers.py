@@ -33,4 +33,4 @@ class WallItemSerializer(serializers.ModelSerializer):
 
 
 class WallItemDetailSerializer(WallItemSerializer):
-    profile = serializers.ReadOnlyField(source='owner.profile.id') 
+    wall = serializers.ReadOnlyField(source='owner.wall.id') 
