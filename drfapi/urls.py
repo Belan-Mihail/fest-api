@@ -47,7 +47,6 @@ urlpatterns = [
 
     # 51
     path('', include('followers.urls')),
-    path('', include('walls.urls')),
     path('', include('wallitems.urls')),
     path('dj-rest-auth/logout/', logout_route),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),

@@ -96,7 +96,6 @@ INSTALLED_APPS = [
     'comments',
     'likes',
     'followers',
-    'walls',
     'wallitems',
     'django_filters',
     'rest_framework.authtoken',

@@ -28,9 +28,7 @@ class WallItemSerializer(serializers.ModelSerializer):
         model = WallItem
 
         fields = [
-            'id', 'wall', 'owner', 'profile_id', 'profile_image', 'created_at', 'updated_at', 'message', 
+            'id', 'owner', 'profile_id', 'profile_image', 'created_at', 'updated_at', 'message', 
         ]
 
 
-class WallItemDetailSerializer(WallItemSerializer):
-    wall = serializers.ReadOnlyField(source='owner.wall.id') 
