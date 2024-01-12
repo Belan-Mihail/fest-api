@@ -4,6 +4,7 @@ from .models import Wall
 class WallSerializer(serializers.ModelSerializer):
         
         owner = serializers.ReadOnlyField(source='owner.username')
+        profile = serializers.ReadOnlyField(source='owner.profile')
 
         def get_is_owner(self, obj):
                 request = self.context['request']
@@ -13,5 +14,5 @@ class WallSerializer(serializers.ModelSerializer):
                 model = Wall
 
         fields = [
-            'id', 'owner',  'is_owner'
+            'id', 'owner',  'is_owner', 'profile'
         ]

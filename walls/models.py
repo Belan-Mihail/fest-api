@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from profiles.models import Profile
+# from wallitems.models import WallItem
 
 
     
@@ -9,10 +10,10 @@ from profiles.models import Profile
 class Wall(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wall_owner")
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
-# def get_recent_items( self):
-# return WallItem.objects.all()
+# def get_recent_items(self):
+#     return WallItem.objects.all()
 
 
 def create_wall(sender, instance, created, **kwargs):
